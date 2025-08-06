@@ -248,16 +248,30 @@ public:
     PrivateChat(string u1, string u2)
     {
         // TODO: Implement constructor
+        user1 = u1;
+        user2 = u2;
     }
 
     void displayChat() const override
     {
         // TODO: Implement private chat display
+        if (messages.empty()){
+        cout << "No messages yet.\n";
+        return;
+        }
+
+        for (const Message& msg : messages)
+        {
+            cout << "[" << msg.getTimestamp() << "] " << msg.getSender() << ": " << msg.getContent() << endl;
+        }
     }
 
     void showTypingIndicator(const string &username) const
     {
         // TODO: Implement typing indicator
+        if (username == user1 || username == user2) {
+        cout << username << " is typing..." << endl;
+        }else cout << "" << endl;
     }
 };
 
@@ -274,6 +288,10 @@ public:
     GroupChat(vector<string> users, string name, string creator)
     {
         // TODO: Implement constructor
+        participants = users;
+        chatName = name;
+        admins.push_back(creator);
+        description = "A new group chat.";
     }
 
     void addAdmin(string newAdmin)
@@ -302,11 +320,32 @@ public:
     void setDescription(string desc)
     {
         // TODO: Implement set description
+        description = desc;
     }
 
     void displayChat() const override
     {
         // TODO: Implement group chat display
+        cout << "Group Chat: " << chatName << endl;
+        cout << "Description: " << description << endl;
+        cout << "Admins: ";
+        for (const string &admin : admins) {
+            cout << admin << " ";
+        }
+        cout << endl;
+        cout << "Participants: ";
+        for (const string &participant : participants) {
+            cout << participant << " ";
+        }
+        cout << endl;
+                if (messages.empty()) {
+            cout << "No messages yet. Be the first to say hi!" << endl;
+        } else {
+            for (const Message& msg : messages) {
+                msg.display();
+            }
+        }
+        cout << "---------------------------------" << endl;
     }
 
     void sendJoinRequest(const string &username)
