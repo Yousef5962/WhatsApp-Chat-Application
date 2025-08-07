@@ -1,4 +1,4 @@
-\#include <iostream>
+#include <iostream>
 #include <vector>
 #include <string>
 #include <ctime>
@@ -371,7 +371,7 @@ private:
         if (users.empty()) {
             return "";
         }
-        if (!isLoggedIn()) {
+        if (isLoggedIn()) {
             return users[currentUserIndex].getUsername();
         }
         return "";
@@ -383,10 +383,59 @@ public:
 
     void signUp() {
         // TODO: Implement user registration
+        bool is_unique = false;
+        string username;
+        while (!is_unique) {
+            cout << "Enter username to sign up: ";
+            getline(cin, username);
+            is_unique = true;
+            for (auto &user: users) {
+                if (user.getUsername() == username) {
+                    cout << username << " is already signed please enter another username." << endl;
+                    is_unique = false;
+                    break;
+                }
+            }
+        }
+        string password;
+        cout << "Enter password to sign up: ";
+        getline(cin, password);
+        is_unique = false;
+        string phoneNumber;
+        while (!is_unique) {
+            cout << "Enter number to sign up: ";
+            getline(cin, phoneNumber);
+            is_unique = true;
+            for (const auto& user: users) {
+                if (user.getPhoneNumber() == phoneNumber) {
+                    cout << phoneNumber << " is already signed please enter another number" << endl;
+                    is_unique = false;
+                    break;
+                }
+            }
+        }
+        users.emplace_back(username, password , phoneNumber);
     }
 
     void login() {
         // TODO: Implement user login
+        bool is_logged_in = false;
+        while (!is_logged_in) {
+            string username;
+            cout << "Enter username to login: ";
+            getline(cin, username);
+            string password;
+            cout << "Enter password to login: ";
+            getline(cin, password);
+            for (int i = 0; i < users.size(); ++i) {
+                if (users[i].getUsername() == username && users[i].checkPassword(password)) {
+                    cout << username << " logged in." << endl;
+                    currentUserIndex = i;
+                    is_logged_in = true;
+                    break;
+                }
+            }
+        }
     }
 
     void startPrivateChat() {
@@ -403,6 +452,13 @@ public:
 
     void logout() {
         // TODO: Implement logout
+        if (isLoggedIn()) {
+            cout << users[currentUserIndex].getUsername() <<" has been logged out." << endl;
+            currentUserIndex = -1;
+        } else {
+            cout << "You have not logged in." << endl;
+        }
+        run();
     }
 
     void run() {
