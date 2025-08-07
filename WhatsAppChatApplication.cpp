@@ -1,4 +1,4 @@
-#include <iostream>
+\#include <iostream>
 #include <vector>
 #include <string>
 #include <ctime>
@@ -255,21 +255,46 @@ public:
     }
 
     void addAdmin(string newAdmin) {
-        // TODO: Implement add admin
+        if(isParticipant(newAdmin)&& !isAdmin(newAdmin)){
+                admins.push_back(newAdmin);
+
+        }
     }
 
     bool removeParticipant(const string &admin, const string &userToRemove) {
-        // TODO: Implement remove participant
-        return false;
+        if(!isAdmin(admin)){
+            return false;
+        }bool removed=false;
+        for(int i=0;i<participants.size();++i){
+            if(participants[i]==userToRemove){
+                participants.erase(participants.begin()+i);
+                removed=true;
+                break;
+            }
+        }
+        if(!removed)return false;
+        for(int i=0;i<admins.size();++i){
+            if(admins[i]== userToRemove){
+                admins.erase(admins.begin()+i);
+                break;
+            }
+        }
+        return true;
     }
 
     bool isAdmin(string username) const {
-        // TODO: Implement admin check
+        for(int i=0;i<admins.size();i++){
+            if(admins[i]== username){
+                return true;
+            }
+        }
         return false;
     }
 
     bool isParticipant(string username) const {
-        // TODO: Implement participant check
+        for(int i=0;i<participants.size();i++){
+            if(participants[i]==username) return true;
+        }
         return false;
     }
 
@@ -303,7 +328,11 @@ public:
     }
 
     void sendJoinRequest(const string &username) {
-        // TODO: Implement join request
+        if(isParticipant(username)){
+           cout<<username<<" is already in the group."<<endl;
+        }else{
+            cout<<username<<"has requested to join the group chat."<<endl;
+        }
     }
 };
 
