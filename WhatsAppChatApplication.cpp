@@ -100,64 +100,84 @@ public:
 // ========================
 class Message {
 private:
-    string sender;
-    string content;
-    string timestamp;
-    string status;
-    Message *replyTo;
+    string sender ;
+    string content ;
+    string timestamp ;
+    string status ;
+    Message *replyTo ;
+
+    string getCurrentTimestamp() const {
+        time_t now = time(0);
+        string ts = ctime(&now);
+        ts.pop_back();
+        return ts;
+    }
 
 public:
     Message() {
-        // TODO: Implement default constructor
+        sender = "";
+        content = "" ;
+        timestamp = getCurrentTimestamp();
+        status ="unsent";
+        replyTo = nullptr;
     }
 
     Message(string sndr, string cntnt) {
-        // TODO: Implement parameterized constructor
+        sender = sndr;
+        content = cntnt;
+        timestamp = getCurrentTimestamp();
+        status ="sent";
+        replyTo = nullptr;
     }
 
     string getContent() const {
         // TODO: Implement getter
-        return "";
+        return content;
     }
 
     string getSender() const {
         // TODO: Implement getter
-        return "";
+        return sender;
     }
 
     string getTimestamp() const {
         // TODO: Implement getter
-        return "";
+        return timestamp;
     }
 
     string getStatus() const {
-        // TODO: Implement getter
-        return "";
+        return status;
+
     }
 
     Message *getReplyTo() const {
-        // TODO: Implement getter
-        return nullptr;
+        return replyTo;
     }
 
     void setStatus(string newStatus) {
-        // TODO: Implement setter
+        status = newStatus;
     }
 
     void setReplyTo(Message *msg) {
-        // TODO: Implement setter
+        replyTo = msg;
     }
 
     void updateTimestamp() {
-        // TODO: Implement timestamp update
+        timestamp = getCurrentTimestamp();
     }
 
     void display() const {
-        // TODO: Implement message display
+        cout<< "sender: " << sender<<endl;
+        cout<< content << endl;
+        cout << timestamp << "   "<< status <<endl;
+        if (replyTo != nullptr) {
+            cout << "Replying to: " << replyTo->getSender() << " - \"" << replyTo->getContent() << "\"" << endl;
+        }
+        cout << "-------------------------*-" << endl;
     }
 
     void addEmoji(string emojiCode) {
-        // TODO: Implement emoji support
+        content += "   reactions : "+   emojiCode;
     }
 };
 
