@@ -407,6 +407,7 @@ public:
         string username;
         while (!is_unique) {
             cout << "Enter username to sign up: ";
+            cin.ignore();
             getline(cin, username);
             is_unique = true;
             for (auto &user: users) {
@@ -443,6 +444,7 @@ public:
         while (!is_logged_in) {
             string username;
             cout << "Enter username to login: ";
+            cin.ignore();
             getline(cin, username);
             string password;
             cout << "Enter password to login: ";
@@ -454,6 +456,9 @@ public:
                     is_logged_in = true;
                     break;
                 }
+            }
+            if (!is_logged_in) {
+                cout << username << " is not logged in." << endl;
             }
         }
     }
