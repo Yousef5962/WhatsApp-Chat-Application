@@ -536,6 +536,7 @@ public:
         int number;
         cout << "Enter number of participants of the group: ";
         cin >> number;
+        number--;
         cin.ignore(); // clear newline
 
         while (number > 0) {
@@ -601,7 +602,6 @@ public:
             cout << "1. Send Message\n2. Search Messages\n3. Delete Message\n4. Back\nChoice: ";
             int action;
             cin >> action;
-
             if (action == 1) {
                 string content;
                 cout << "Enter message content: ";

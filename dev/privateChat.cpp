@@ -159,9 +159,46 @@ public:
         // TODO: Implement export to file
     }
 };
+// ========================
+//     PRIVATE CHAT CLASS
+// ========================
+class PrivateChat : public Chat {
+private:
+    string user1;
+    string user2;
+
+public:
+    PrivateChat(string u1, string u2) {
+        // TODO: Implement constructor
+        user1 = u1;
+        user2 = u2;
+        participants.push_back(user1);
+        participants.push_back(user2);
+        chatName = user1 + " and " + user2;
+    }
+
+    void displayChat() const override {
+        // TODO: Implement private chat display
+        if (messages.empty()) {
+            cout << "No messages yet.\n";
+            return;
+        }
+
+        for (const Message &msg: messages) {
+            cout << "[" << msg.getTimestamp() << "] " << msg.getSender() << ": " << msg.getContent() << endl;
+        }
+    }
+
+    void showTypingIndicator(const string &username) const {
+        // TODO: Implement typing indicator
+        if (username == user1 || username == user2) {
+            cout << username << " is typing..." << endl;
+        } else cout << "" << endl;
+    }
+};
 
 int main() {
-    // Example usage of Chat class
-    Chat chat({"john_doe", "jane_smith"}, "Chat_1");
+    // Example usage of GroupChat and PrivateChat
+
     return 0;
 }
