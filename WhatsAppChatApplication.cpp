@@ -3,6 +3,7 @@
 #include <string>
 #include <ctime>
 #include <algorithm>
+#include <fstream>
 using namespace std;
 
 // ========================
@@ -247,6 +248,11 @@ public:
 
     void exportToFile(const string &filename) const {
         // TODO: Implement export to file
+        ofstream outFile(filename);
+        for (const Message &msg: messages) {
+            outFile << "[" << msg.getTimestamp() << "] " << msg.getSender() << ": " << msg.getContent() << endl;
+        }
+        outFile.close();
     }
 };
 
@@ -665,8 +671,7 @@ public:
                     } else {
                         cout << "Invalid choice." << endl;
                     }
-                }
-            }else{
+                } else {
                 selectedChat->displayChat();
                 cout << "1. Send Message\n2. Search Messages\n3. Delete Message\n4. Back\nChoice: ";
                 int action;
@@ -707,7 +712,7 @@ public:
                 }
             }
         }
-    }
+    }}
 
     void logout() {
         // TODO: Implement logout
