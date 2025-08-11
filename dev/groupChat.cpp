@@ -259,6 +259,9 @@ int main(){
     string groupName = "Friends";
     vector<string> members = {"Alice", "Bob"};
     chats.emplace_back(new GroupChat(members, groupName, "Y"));
-    cout << typeid(chats[0]).name() << endl;
+    cout << typeid(*chats[0]).name() << endl;
+    if(typeid(*chats[0]).name() == typeid(GroupChat).name()){
+       cout << "well done" << endl;
+    }
     return 0;
 }

@@ -598,43 +598,113 @@ public:
 
         bool inChat = true;
         while(inChat) {
-            selectedChat->displayChat();
-            cout << "1. Send Message\n2. Search Messages\n3. Delete Message\n4. Back\nChoice: ";
-            int action;
-            cin >> action;
-            if (action == 1) {
-                string content;
-                cout << "Enter message content: ";
-                cin.ignore();
-                getline(cin, content);
-                Message msg(getCurrentUsername(), content);
-                selectedChat->addMessage(msg);
-            } else if (action == 2) {
-                string keyword;
-                cout << "Enter keyword to search: ";
-                cin.ignore();
-                getline(cin, keyword);
-                vector<Message> results = selectedChat->searchMessages(keyword);
-                if (results.empty()) {
-                    cout << "No messages found." << endl;
-                } else {
-                    for (const Message &msg: results) {
-                        msg.display();
+            if(typeid(*selectedChat).name() == typeid(GroupChat).name()) {
+                cout << "well done" << endl;
+                selectedChat->displayChat();
+                cout << "1. Send Message\n2. Search Messages\n3. Delete Message";
+                GroupChat* groupChat = dynamic_cast<GroupChat*>(selectedChat);
+                if(groupChat && groupChat->isAdmin(getCurrentUsername())) {
+                    cout << "\n4. Add admin\n5. Remove Participant\n6. Change description\n7. Back\nChoice: ";
+                    int action;
+                    cin >> action;
+                    if (action == 1) {
+                        string content;
+                        cout << "Enter message content: ";
+                        cin.ignore();
+                        getline(cin, content);
+                        Message msg(getCurrentUsername(), content);
+                        selectedChat->addMessage(msg);
+                    } else if (action == 2) {
+                        string keyword;
+                        cout << "Enter keyword to search: ";
+                        cin.ignore();
+                        getline(cin, keyword);
+                        vector<Message> results = selectedChat->searchMessages(keyword);
+                        if (results.empty()) {
+                            cout << "No messages found." << endl;
+                        } else {
+                            for (const Message &msg: results) {
+                                msg.display();
+                            }
+                        }
+                    } else if (action == 3) {
+                        int index;
+                        cout << "Enter message index to delete: ";
+                        cin >> index;
+                        if (selectedChat->deleteMessage(index - 1, getCurrentUsername())) {
+                            cout << "Message deleted." << endl;
+                        } else {
+                            cout << "Failed to delete message." << endl;
+                        }
+                    } else if (action == 4) {
+                        string newAdmin;
+                        cout << "Enter username to add as admin: ";
+                        cin.ignore();
+                        getline(cin, newAdmin);
+                        groupChat->addAdmin(newAdmin);
+                        cout << newAdmin << " has been added as an admin." << endl;
+                    } else if (action == 5) {
+                        string userToRemove;
+                        cout << "Enter username to remove from group: ";
+                        cin.ignore();
+                        getline(cin, userToRemove);
+                        if (groupChat->removeParticipant(getCurrentUsername(), userToRemove)) {
+                            cout << userToRemove << " has been removed from the group." << endl;
+                        } else {
+                            cout << "Failed to remove " << userToRemove << "." << endl;
+                        }
+                    } else if (action == 6) {
+                        string newDescription;
+                        cout << "Enter new group description: ";
+                        cin.ignore();
+                        getline(cin, newDescription);
+                        groupChat->setDescription(newDescription);
+                        cout << "Group description updated." << endl;
+                    } else if (action == 7) {
+                        inChat = false;
+                    } else {
+                        cout << "Invalid choice." << endl;
                     }
                 }
-            } else if (action == 3) {
-                int index;
-                cout << "Enter message index to delete: ";
-                cin >> index;
-                if (selectedChat->deleteMessage(index - 1, getCurrentUsername())) {
-                    cout << "Message deleted." << endl;
+            }else{
+                selectedChat->displayChat();
+                cout << "1. Send Message\n2. Search Messages\n3. Delete Message\n4. Back\nChoice: ";
+                int action;
+                cin >> action;
+                if (action == 1) {
+                    string content;
+                    cout << "Enter message content: ";
+                    cin.ignore();
+                    getline(cin, content);
+                    Message msg(getCurrentUsername(), content);
+                    selectedChat->addMessage(msg);
+                } else if (action == 2) {
+                    string keyword;
+                    cout << "Enter keyword to search: ";
+                    cin.ignore();
+                    getline(cin, keyword);
+                    vector<Message> results = selectedChat->searchMessages(keyword);
+                    if (results.empty()) {
+                        cout << "No messages found." << endl;
+                    } else {
+                        for (const Message &msg: results) {
+                            msg.display();
+                        }
+                    }
+                } else if (action == 3) {
+                    int index;
+                    cout << "Enter message index to delete: ";
+                    cin >> index;
+                    if (selectedChat->deleteMessage(index - 1, getCurrentUsername())) {
+                        cout << "Message deleted." << endl;
+                    } else {
+                        cout << "Failed to delete message." << endl;
+                    }
+                } else if (action == 4) {
+                    inChat = false;
                 } else {
-                    cout << "Failed to delete message." << endl;
+                    cout << "Invalid choice." << endl;
                 }
-            } else if (action == 4) {
-                inChat = false;
-            } else {
-                cout << "Invalid choice." << endl;
             }
         }
     }
