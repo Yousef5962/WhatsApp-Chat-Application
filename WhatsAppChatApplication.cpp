@@ -280,7 +280,6 @@ public:
             cout << "No messages yet.\n";
             return;
         }
-
         for (const Message &msg: messages) {
             cout << "[" << msg.getTimestamp() << "] " << msg.getSender() << ": " << msg.getContent() << endl;
         }
@@ -605,12 +604,10 @@ public:
         bool inChat = true;
         while(inChat) {
             if(typeid(*selectedChat).name() == typeid(GroupChat).name()) {
-                cout << "well done" << endl;
-                selectedChat->displayChat();
-                cout << "1. Send Message\n2. Search Messages\n3. Delete Message";
                 GroupChat* groupChat = dynamic_cast<GroupChat*>(selectedChat);
                 if(groupChat && groupChat->isAdmin(getCurrentUsername())) {
-                    cout << "\n4. Add admin\n5. Remove Participant\n6. Change description\n7. Back\nChoice: ";
+                    selectedChat->displayChat();
+                    cout << "\n1. Send Message\n2. Search Messages\n3. Delete Message\n4. Add admin\n5. Remove Participant\n6. Change description\n7. Back\nChoice: ";
                     int action;
                     cin >> action;
                     if (action == 1) {
@@ -711,8 +708,48 @@ public:
                     cout << "Invalid choice." << endl;
                 }
             }
+        }  else {
+                selectedChat->displayChat();
+                cout << "1. Send Message\n2. Search Messages\n3. Delete Message\n4. Back\nChoice: ";
+                int action;
+                cin >> action;
+                if (action == 1) {
+                    string content;
+                    cout << "Enter message content: ";
+                    cin.ignore();
+                    getline(cin, content);
+                    Message msg(getCurrentUsername(), content);
+                    selectedChat->addMessage(msg);
+                } else if (action == 2) {
+                    string keyword;
+                    cout << "Enter keyword to search: ";
+                    cin.ignore();
+                    getline(cin, keyword);
+                    vector<Message> results = selectedChat->searchMessages(keyword);
+                    if (results.empty()) {
+                        cout << "No messages found." << endl;
+                    } else {
+                        for (const Message &msg: results) {
+                            msg.display();
+                        }
+                    }
+                } else if (action == 3) {
+                    int index;
+                    cout << "Enter message index to delete: ";
+                    cin >> index;
+                    if (selectedChat->deleteMessage(index - 1, getCurrentUsername())) {
+                        cout << "Message deleted." << endl;
+                    } else {
+                        cout << "Failed to delete message." << endl;
+                    }
+                } else if (action == 4) {
+                    inChat = false;
+                } else {
+                    cout << "Invalid choice." << endl;
+                }
+            }
         }
-    }}
+    }
 
     void logout() {
         // TODO: Implement logout
