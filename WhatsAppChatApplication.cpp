@@ -25,6 +25,7 @@ public:
         phoneNumber = "";
         status = "";
         lastSeen = "";
+        updateLastSeen();
     }
 
     User(string uname, string pwd, string phone) {
@@ -32,6 +33,7 @@ public:
         username = uname;
         password = pwd;
         phoneNumber = phone;
+        updateLastSeen();
     }
 
     string getUsername() const {
@@ -76,12 +78,11 @@ public:
             cout << "Current time: " << dt;
         "Thu Aug 7 01:45:23 2025"
     */
-    void updateLastSeen() {
+    void updateLastSeen() const {
         // TODO: Implement last seen update  (Done)
         time_t now = time(0); // Get current time
         char *datetime = ctime(&now); // Convert to string
-        lastSeen = datetime; // save in the lastSeen
-        cout << "User: " << username << " last seen in: " << lastSeen << endl;
+        const_cast<User*>(this)->lastSeen = datetime; // save in the lastSeen
     }
 
     bool checkPassword(string pwd) const {
@@ -210,6 +211,11 @@ public:
     string getChatName() const {
         return chatName;
     }
+
+    vector<string> getParticipants() const {
+        return participants;
+    }
+
 
     bool deleteMessage(int index, const string &username) {
         // TODO: Implement message deletion
@@ -710,6 +716,19 @@ public:
             }
         }  else {
                 selectedChat->displayChat();
+                cout << "\n--- Last Seen Info ---" << endl;
+                for (const string &participant : selectedChat->getParticipants()) {
+                    int idx = findUserIndex(participant);
+                    if (idx != -1) {
+                        cout << participant << " last seen: ";
+                        if(participant == getCurrentUsername()) {
+                            users[idx].updateLastSeen();
+                            cout << users[idx].getLastSeen() << endl;
+                        }else {
+                            cout << users[idx].getLastSeen() << endl;
+                        }
+                    }
+                }
                 cout << "1. Send Message\n2. Search Messages\n3. Delete Message\n4. Back\nChoice: ";
                 int action;
                 cin >> action;
